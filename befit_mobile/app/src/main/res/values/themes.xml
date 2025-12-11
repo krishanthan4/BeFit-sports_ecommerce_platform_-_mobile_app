@@ -1,0 +1,22 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.MObile_v2" parent="Theme.Material3.DynamicColors.Light.NoActionBar">
+        <item name="colorPrimary">@color/PrimaryButtonColor</item>
+        <item name="colorPrimaryVariant">@color/PrimaryButtonColor</item>
+        <item name="colorOnPrimary">@color/PrimaryButtonTextColor</item>
+        <item name="colorSecondary">@color/SecondaryButtonColor</item>
+        <item name="colorSecondaryVariant">@color/SecondaryButtonColor</item>
+        <item name="colorOnSecondary">@color/SecondaryButtonTextColor</item>
+        <item name="colorSurface">@color/PrimaryButtonTextColor</item>
+        <item name="colorOnSurface">@color/PrimaryButtonTextColor</item>
+        <item name="android:fontFamily">@font/lato_regular</item>
+    </style>
+
+    <style name="Theme.MObile_v2" parent="Base.Theme.MObile_v2" />
+
+    <style name="Theme.viewpager" parent="Theme.MaterialComponents.NoActionBar" />
+
+    <style name="App.Custom.Indicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">#98606060</item>
+    </style>
+</resources>

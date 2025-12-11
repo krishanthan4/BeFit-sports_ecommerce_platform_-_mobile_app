@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="h1">32sp</dimen>
+    <dimen name="p">18sp</dimen>
+    <dimen name="p_small">15sp</dimen>
+
+    <!--     margins-->
+    <dimen name="margin_start">20sp</dimen>
+    <dimen name="input_field_padding">6sp</dimen>
+    <dimen name="input_field_radius">8sp</dimen>
+    <dimen name="button_radius">10sp</dimen>
+    <dimen name="button_padding">5sp</dimen>
+
+    <!-- <dimen name="margin_start">20sp</dimen> -->
+</resources>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/admin_dashboard_menu_rail_dashboard_overview"
+        android:enabled="true"
+        android:icon="@drawable/home"
+        android:title="Dashboard" />
+    <item
+        android:id="@+id/admin_dashboard_menu_rail_user_management"
+        android:enabled="true"
+        android:icon="@drawable/multiple_users"
+        android:title="User Management" />
+    <item
+        android:id="@+id/admin_dashboard_menu_rail_seller_management"
+        android:enabled="true"
+        android:icon="@drawable/two_people"
+        android:title="Seller Management" />
+    <item
+        android:id="@+id/admin_dashboard_menu_rail_product_management"
+        android:enabled="true"
+        android:icon="@drawable/products"
+        android:title="Product Management" />
+    <item
+        android:id="@+id/admin_dashboard_menu_rail_category_management"
+        android:enabled="true"
+        android:icon="@drawable/category_icon_2"
+        android:title="Category Management" />
+    <item
+        android:id="@+id/admin_dashboard_menu_rail_feedbacks_and_reviews"
+        android:enabled="true"
+        android:icon="@drawable/feedback"
+        android:title="Feedbacks and Reviews" />
+    <item
+        android:id="@+id/admin_dashboard_menu_rail_promotions_and_offers"
+        android:enabled="true"
+        android:icon="@drawable/promotions_and_offers_icon"
+        android:title="Promotions and Offers" />
+</menu>

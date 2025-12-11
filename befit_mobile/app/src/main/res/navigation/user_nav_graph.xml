@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/user_nav_graph"
+    app:startDestination="@id/user_watchlist_fragment">
+    <fragment
+        android:id="@+id/user_home_fragment"
+        android:name="com.sprinsec.mobile_v2.ui.fragments.user.user_home_fragment"
+        android:label="fragment__user__home"
+        tools:layout="@layout/fragment__user__home" >
+        <action
+            android:id="@+id/action_user_home_fragment_to_user_search_fragment"
+            app:destination="@id/user_search_fragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/user_search_fragment"
+        android:name="com.sprinsec.mobile_v2.ui.fragments.user.user_search_fragment"
+        android:label="fragment__user__search"
+        tools:layout="@layout/fragment__user__search" >
+        <action
+            android:id="@+id/action_user_search_fragment_to_user_watchlist_fragment"
+            app:destination="@id/user_watchlist_fragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/user_watchlist_fragment"
+        android:name="com.sprinsec.mobile_v2.ui.fragments.user.user_watchlist_fragment"
+        android:label="fragment__user__watchlist"
+        tools:layout="@layout/fragment__user__watchlist" >
+        <action
+            android:id="@+id/action_user_watchlist_fragment_to_user_cart_fragment"
+            app:destination="@id/user_cart_fragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/user_cart_fragment"
+        android:name="com.sprinsec.mobile_v2.ui.fragments.user.user_cart_fragment"
+        android:label="fragment__user__cart"
+        tools:layout="@layout/fragment__user__cart" >
+        <action
+            android:id="@+id/action_user_cart_fragment_to_user_profile_fragment"
+            app:destination="@id/user_profile_fragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/user_profile_fragment"
+        android:name="com.sprinsec.mobile_v2.ui.fragments.user.user_profile_fragment"
+        android:label="fragment__user__profile"
+        tools:layout="@layout/fragment__user__profile" >
+        <action
+            android:id="@+id/action_user_profile_fragment_to_user_home_fragment"
+            app:destination="@id/user_home_fragment" />
+    </fragment>
+</navigation>

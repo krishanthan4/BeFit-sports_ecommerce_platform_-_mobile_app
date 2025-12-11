@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <application
+        android:name=".util.BroadCastReciever.SportsApplication"
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:enableOnBackInvokedCallback="true"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/app_icon"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/app_icon_round"
+        android:supportsRtl="true"
+        android:theme="@style/Base.Theme.MObile_v2"
+        tools:targetApi="tiramisu">
+        <activity
+            android:name=".ui.user.about_us_activity"
+            android:exported="false" />
+        <service android:name=".FirebaseMessageReceiver"
+            android:exported="true"
+            android:permission="TODO">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <!--TODO: Uncomment this before viva-->
+
+               <meta-data
+                   android:name="com.google.android.geo.API_KEY"
+                   android:value="AIzaSyBlTB_nNXwvKfVFRI18er7RraMN9amOSOo" />
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+        <activity
+            android:name=".ui.user.update_profile_activity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.common.onboarding_activity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.common.SplashActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.fragments.user.seller.seller_order_status_activity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.user.user_messages"
+            android:exported="false" />
+        <activity
+            android:name=".ui.user.user_main_settings"
+            android:exported="false" />
+        <activity
+            android:name=".ui.user.user_single_product_view_activity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.common.StartingActivity"
+            android:exported="true" />
+        <activity
+            android:name=".ui.common.VerifyCodeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.user.user_home_interface"
+            android:exported="true" />
+        <activity
+            android:name=".ui.common.auth.SignInActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.common.auth.signUp.SignUpActivity"
+            android:exported="true" />
+        <activity
+            android:name=".ui.common.auth.signUp.SelectCountryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.admin.admin_dashboard_interface"
+            android:exported="true" />
+    </application>
+
+</manifest>

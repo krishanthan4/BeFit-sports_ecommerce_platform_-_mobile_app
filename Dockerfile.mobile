@@ -1,0 +1,17 @@
+FROM gradle:8.5-jdk17 AS build
+
+WORKDIR /app
+
+COPY befit_mobile/build.gradle.kts befit_mobile/settings.gradle.kts ./
+COPY befit_mobile/gradle ./gradle
+COPY befit_mobile/app ./app
+
+RUN gradle assembleDebug --no-daemon
+
+FROM alpine:latest
+
+WORKDIR /apk
+
+COPY --from=build /app/app/build/outputs/apk/debug/app-debug.apk ./befit-mobile.apk
+
+CMD ["sh", "-c", "echo 'APK built successfully at /apk/befit-mobile.apk' && tail -f /dev/null"]

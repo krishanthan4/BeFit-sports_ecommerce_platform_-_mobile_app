@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">BeFit Mobile</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!--signin page-->
+    <string name="user_signin_title">BeFit | Sign In</string>
+    <string name="user_signin_email_text">Email Address</string>
+    <string name="user_signin_password_text">Password</string>
+    <string name="user_signin_button_text">Sign In</string>
+    <string name="user_signin_already_exist_text">Don\'t have a account?</string>
+
+    <!-- signup page -->
+    <string name="user_signup_title">BeFit | Sign Up</string>
+    <string name="user_signup_button_text">Sign Up</string>
+    <string name="user_signup_retype_password_text">Retype Password</string>
+    <string name="user_signup_already_exist_text">already have a account?</string>
+
+    <!-- select country page -->
+    <string name="user_select_country_title">BeFit | Select Country</string>
+    <string name="user_select_country_button">Continue</string>
+
+    <!-- admin verfiy code page -->
+    <string name="admin_verifycode_title">BeFit | Verification</string>
+    <string name="admin_verifycode_subtext">Enter the verification code sent to your email</string>
+
+    <!-- admin user management -->
+    <string name="admin_user_management_title">User Managment</string>
+    <string name="admin_user_management_searchbar_hint">Search Users</string>
+    <string name="admin_seller_management_searchbar_hint">Search Sellers</string>
+    <string name="admin_products_management_searchbar_hint">Search Products</string>
+    <string name="admin_category_management_searchbar_hint">Search Categories</string>
+
+</resources>

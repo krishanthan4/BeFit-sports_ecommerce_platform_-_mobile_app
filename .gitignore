@@ -1,0 +1,73 @@
+# Mobile App
+befit_mobile/*.iml
+befit_mobile/.gradle
+befit_mobile/local.properties
+befit_mobile/.idea/caches
+befit_mobile/.idea/libraries
+befit_mobile/.idea/modules.xml
+befit_mobile/.idea/workspace.xml
+befit_mobile/.idea/navEditor.xml
+befit_mobile/.idea/assetWizardSettings.xml
+befit_mobile/.DS_Store
+befit_mobile/build
+befit_mobile/captures
+befit_mobile/.externalNativeBuild
+befit_mobile/.cxx
+befit_mobile/local.properties
+befit_mobile/app/src/main/java/com/sprinsec/mobile_v2/util/Config.java
+befit_mobile/app/google-services.json
+
+# Web/Server - Sensitive Files
+web/config/database.php
+web/config/.env
+web/config.php
+web/.env*.local
+web/.env
+web/api/befit_mobile_service_account_file.json
+
+# Uploaded Files (optional - uncomment if not tracking uploads)
+# web/public/images/product_images/*
+# web/resources/profile_images/*
+
+# Node modules
+web/node_modules/
+web/package-lock.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+mysql_data/
+
+# Logs
+*.log
+web/logs/
+
+# Build outputs
+befit_mobile/app/build/
+befit_mobile/.gradle/
+
+# Images
+web/public/images/products/*
+web/public/images/profiles/*
+!web/public/images/products/.gitkeep
+!web/public/images/profiles/.gitkeep
+
+# Logs
+*.log
+web/logs/
+
+# Cache
+web/cache/
+web/temp/
+
+#CI /CD
+.github/

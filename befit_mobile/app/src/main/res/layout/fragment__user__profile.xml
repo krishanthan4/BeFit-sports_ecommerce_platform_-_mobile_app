@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_user_profile_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/watchlist_bg_gradient"
+    android:orientation="vertical"
+    tools:context=".ui.fragments.user.user_profile_fragment">
+
+    <!-- Profile Header -->
+    <LinearLayout
+        android:id="@+id/fragment_user_profile_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:elevation="2dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <ImageView
+            android:id="@+id/fragment_user_profile_profile_image"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="8dp"
+            android:background="@drawable/round_image_background"
+            android:clipToOutline="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/profile_icon3" />
+
+        <TextView
+            android:id="@+id/fragment_user_profile_user_address"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_fragment_give_feedback_edit_text"
+            android:paddingStart="5dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:textColor="#212121"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/fragment_user_profile_country_image"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:padding="4dp"
+            android:src="@drawable/select_country" />
+
+        <ImageView
+            android:id="@+id/fragment_user_profile_settings_icon"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="8dp"
+            android:padding="4dp"
+            android:src="@drawable/settings" />
+    </LinearLayout>
+
+    <ScrollView
+        android:id="@+id/fragment_user_profile_scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:overScrollMode="never">
+
+        <LinearLayout
+            android:id="@+id/fragment_user_profile_content_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Order Status Section -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:elevation="2dp"
+                android:orientation="horizontal"
+                android:padding="16dp"
+                android:visibility="gone">
+
+                <!-- Order Placed -->
+                <LinearLayout
+                    android:id="@+id/fragment_user_profile_to_pay"
+                    style="@style/ProfileMenuItem">
+
+                    <ImageView
+                        style="@style/ProfileMenuIcon"
+                        android:src="@drawable/to_pay_icon"
+                        app:tint="@color/gray_600" />
+
+                    <TextView
+                        style="@style/ProfileMenuText"
+                        android:text="Order Placed" />
+                </LinearLayout>
+
+                <!-- To Ship -->
+                <LinearLayout
+                    android:id="@+id/fragment_user_profile_to_ship"
+                    style="@style/ProfileMenuItem">
+
+                    <ImageView
+                        style="@style/ProfileMenuIcon"
+                        android:src="@drawable/to_ship_icon"
+                        app:tint="@color/gray_600" />
+
+                    <TextView
+                        style="@style/ProfileMenuText"
+                        android:text="To Ship" />
+                </LinearLayout>
+
+                <!-- To Receive -->
+                <LinearLayout
+                    android:id="@+id/fragment_user_profile_to_receive"
+                    style="@style/ProfileMenuItem">
+
+                    <ImageView
+                        style="@style/ProfileMenuIcon"
+                        android:src="@drawable/to_receive_icon"
+                        app:tint="@color/gray_600" />
+
+                    <TextView
+                        style="@style/ProfileMenuText"
+                        android:text="To Receive" />
+                </LinearLayout>
+
+                <!-- Completed -->
+                <LinearLayout
+                    android:id="@+id/fragment_user_profile_completed"
+                    style="@style/ProfileMenuItem">
+
+                    <ImageView
+                        style="@style/ProfileMenuIcon"
+                        android:src="@drawable/completed_icon"
+                        app:tint="@color/gray_600" />
+
+                    <TextView
+                        style="@style/ProfileMenuText"
+                        android:text="Completed" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Customer Services Section -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:background="@color/white"
+                android:elevation="2dp"
+                android:orientation="horizontal"
+                android:padding="16dp">
+
+                <!-- Customer Care -->
+                <LinearLayout
+                    android:id="@+id/fragment_user_profile_customer_care"
+                    style="@style/ProfileMenuItem">
+
+                    <ImageView
+                        style="@style/ProfileMenuIcon"
+                        android:src="@drawable/customer_care_icon"
+                        app:tint="@color/gray_600" />
+
+                    <TextView
+                        style="@style/ProfileMenuText"
+                        android:text="Customer Care" />
+                </LinearLayout>
+
+                <!-- Purchase History -->
+                <LinearLayout
+                    android:id="@+id/fragment_user_profile_purchased_history"
+                    style="@style/ProfileMenuItem">
+
+                    <ImageView
+                        style="@style/ProfileMenuIcon"
+                        android:src="@drawable/completed_icon"
+                        app:tint="@color/gray_600" />
+
+                    <TextView
+                        style="@style/ProfileMenuText"
+                        android:text="Purchase History" />
+                </LinearLayout>
+
+                <!-- Add Products -->
+                <LinearLayout
+                    android:id="@+id/fragment_user_profile_add_product"
+                    style="@style/ProfileMenuItem">
+
+                    <ImageView
+                        style="@style/ProfileMenuIcon"
+                        android:src="@drawable/add_product_icon"
+                        app:tint="@color/gray_600" />
+
+                    <TextView
+                        style="@style/ProfileMenuText"
+                        android:text="Add Products" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- Promotion Slider -->
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/fragment_user_profile_viewPager2"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="24dp"
+                android:clipToPadding="false"
+                android:paddingStart="40dp"
+                android:paddingEnd="40dp" />
+
+            <!-- Seller Features Section -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:text="Seller Features"
+                android:textColor="#212121"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:id="@+id/fragment_user_profile_seller_features_linear_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:elevation="2dp"
+                android:orientation="horizontal"
+                android:padding="16dp">
+
+                <!-- Selling History -->
+                <LinearLayout
+                    android:id="@+id/fragment_user_profile_selling_history"
+                    style="@style/ProfileMenuItem">
+
+                    <ImageView
+                        style="@style/ProfileMenuIcon"
+                        android:src="@drawable/selling_history_icon"
+                        app:tint="@color/gray_600" />
+
+                    <TextView
+                        style="@style/ProfileMenuText"
+                        android:text="Selling History" />
+                </LinearLayout>
+
+                <!-- My Products -->
+                <LinearLayout
+                    android:id="@+id/fragment_user_profile_my_products"
+                    style="@style/ProfileMenuItem">
+
+                    <ImageView
+                        style="@style/ProfileMenuIcon"
+                        android:src="@drawable/my_products_icon"
+                        app:tint="@color/gray_600" />
+
+                    <TextView
+                        style="@style/ProfileMenuText"
+                        android:text="My Products" />
+                </LinearLayout>
+                <!-- Order Status -->
+                <LinearLayout
+                    android:id="@+id/fragment_user_profile_order_status"
+                    style="@style/ProfileMenuItem">
+
+                    <ImageView
+                        style="@style/ProfileMenuIcon"
+                        android:src="@drawable/order_status_icon"
+                        app:tint="@color/gray_600" />
+
+                    <TextView
+                        style="@style/ProfileMenuText"
+                        android:text="Order Status" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- About Us Section -->
+            <LinearLayout
+                android:id="@+id/fragment_user_profile_about_us"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:background="@color/white"
+                android:elevation="2dp"
+                android:gravity="center_vertical"
+                android:padding="16dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/think_icon" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_weight="1"
+                    android:text="About Us"
+                    android:textColor="#212121"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/right_icon"
+                    app:tint="@color/gray_600" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

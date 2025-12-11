@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/sign_in_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginStart="20dp"
+    android:layout_marginEnd="20dp"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:context=".ui.common.auth.SignInActivity">
+
+    <TextView
+        android:id="@+id/sign_in_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="64dp"
+        android:text="@string/user_signin_title"
+        android:textSize="@dimen/h1" />
+
+    <TextView
+        android:id="@+id/sign_in_email_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="@string/user_signin_email_text"
+        android:textSize="@dimen/p" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/sign_in_email_input_fieldLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:hint="email"
+        android:inputType="textEmailAddress"
+        android:padding="@dimen/input_field_padding">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/sign_in_email_input_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/PrimaryButtonColor" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/sign_in_password_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/user_signin_password_text"
+        android:textSize="@dimen/p" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/sign_in_password_input_fieldLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="password"
+        android:padding="@dimen/input_field_padding"
+        app:endIconMode="password_toggle"
+        app:endIconTint="@color/PrimaryButtonColor">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/sign_in_password_input_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text|textPassword"
+            android:textColor="@color/PrimaryButtonColor" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <ProgressBar
+        android:id="@+id/sign_in_progress_bar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:indeterminateTint="@color/black"
+        android:visibility="invisible" />
+
+    <Button
+        android:id="@+id/sign_in_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="@string/user_signin_button_text"
+        android:textAllCaps="false"
+        android:textSize="@dimen/p"
+        app:cornerRadius="@dimen/input_field_radius" />
+
+    <TextView
+        android:id="@+id/sign_in_already_have_account_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:text="@string/user_signin_already_exist_text"
+        android:textSize="@dimen/p_small" />
+
+    <TextView
+        android:id="@+id/sign_in_already_have_click"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginStart="1dp"
+        android:padding="10dp"
+        android:text="@string/user_signup_button_text"
+        android:textSize="@dimen/p_small"
+        android:textStyle="bold" />
+
+
+</LinearLayout>

@@ -1,0 +1,76 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: befit_db
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: befit_db
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./others/database.sql:/docker-entrypoint-initdb.d/database.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - befit_network
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+    container_name: befit_web
+    ports:
+      - "8083:80"
+    volumes:
+      - ./web:/var/www/html
+      - ./web/public/images:/var/www/html/public/images
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_HOST: db
+      DB_NAME: befit_db
+      DB_USER: root
+      DB_PASSWORD: password
+      DB_PORT: 3306
+      DB_CHARSET: utf8mb4
+    networks:
+      - befit_network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: befit_phpmyadmin
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: password
+    depends_on:
+      - db
+    networks:
+      - befit_network
+
+  mobile_build:
+    build:
+      context: .
+      dockerfile: Dockerfile.mobile
+    container_name: befit_mobile_build
+    volumes:
+      - ./befit_mobile/app/build/outputs/apk:/apk
+    profiles:
+      - build
+
+volumes:
+  mysql_data:
+
+networks:
+  befit_network:
+    driver: bridge
