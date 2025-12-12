@@ -1,38 +1,29 @@
-function handleSearch(event) {
+async function handleSearch(event) {
     event.preventDefault();
     const searchText = document.getElementById("searchInput").value.trim();
     const sellingHistoryAboveDiv = document.getElementById("sellingHistoryAboveDiv");
   
     if (searchText !== "" && searchText!==null) {
-      const xhr = new XMLHttpRequest();
-
-      xhr.onreadystatechange = function () {
-        if (xhr.readyState === XMLHttpRequest.DONE) {
-          if (xhr.status === 200) {
-            const response = JSON.parse(xhr.responseText);
+      try {
+        const response = await api.get('/seller/sales-history', { search: searchText });
   
-            if (response.msg === "success") {
-              if (response.data.length > 0) {
-                updateTable(response.data);
-              } else {
-                const sellingHistoryTable = document.getElementById("sellingHistoryTable");
-                if (sellingHistoryTable && !sellingHistoryTable.classList.contains("hidden")) {
-                  sellingHistoryTable.classList.add("hidden");
-                }
-                
-           document.getElementById("emptySellingHistory").classList.remove("hidden");
-              }
-            } else {
-              console.error("Search error:", response.data);
-            }
+        if (response.success) {
+          if (response.data.length > 0) {
+            updateTable(response.data);
           } else {
-            console.error("Failed to fetch search results:", xhr.status);
+            const sellingHistoryTable = document.getElementById("sellingHistoryTable");
+            if (sellingHistoryTable && !sellingHistoryTable.classList.contains("hidden")) {
+              sellingHistoryTable.classList.add("hidden");
+            }
+            
+            document.getElementById("emptySellingHistory").classList.remove("hidden");
           }
+        } else {
+          console.error("Search error:", response.message);
         }
-      };
-      xhr.open("POST", "/processes/searchSellingHistoryProcess.php", true);
-      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-      xhr.send("search_text=" + encodeURIComponent(searchText));
+      } catch (error) {
+        console.error("Failed to fetch search results:", error);
+      }
     } else {
       // If search text is empty, load all sellings
       loadAllSellings();
@@ -69,25 +60,16 @@ if(emptySellingHistory && !emptySellingHistory.classList.contains("hidden")){
   });
 }
 
-function loadAllSellings() {
-  var xhr = new XMLHttpRequest();
+async function loadAllSellings() {
+  try {
+    const response = await api.get('/seller/sales-history');
 
-  xhr.onreadystatechange = function () {
-    if (xhr.readyState === XMLHttpRequest.DONE) {
-      if (xhr.status === 200) {
-        var response = JSON.parse(xhr.responseText);
-
-        if (response.msg === "success") {
-          updateTable(response.data);
-        } else {
-          console.error("Failed to load all users:", response.msg);
-        }
-      } else {
-        console.error("Failed to fetch all users:", xhr.status);
-      }
+    if (response.success) {
+      updateTable(response.data);
+    } else {
+      console.error("Failed to load sales history:", response.message);
     }
-  };
-  xhr.open("GET", "/processes/loadAllSellingHistoryProcess.php", true);
-  xhr.setRequestHeader("Content-Type", "application/json");
-  xhr.send();
+  } catch (error) {
+    console.error("Failed to fetch sales history:", error);
+  }
 }

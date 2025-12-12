@@ -6,15 +6,12 @@ function searchInputFocus() {
         document.getElementById("cancelX").classList.remove("hidden");
 
         if (searchInput !== "") {
-            const request = new XMLHttpRequest();
-            const form = new FormData();
-            form.append("search_text", searchInput);
-            request.onreadystatechange = () => {
-                if (request.readyState == 4 && request.status == 200) {
-                    const result = JSON.parse(request.responseText);
-                    if (result["msg"] == "success") {
-                        makeHTML(result);
-
+            (async () => {
+                try {
+                    const response = await api.get('/admin/reviews', { search: searchInput });
+                    
+                    if (response.success && response.data) {
+                        makeHTML(response.data);
                     } else {
                         document.getElementById("subDiv").remove();
                         const subDiv = document.createElement("div");
@@ -22,10 +19,10 @@ function searchInputFocus() {
                         subDiv.id = "subDiv";
                         document.getElementById("mainDiv").append(subDiv);
                     }
+                } catch (error) {
+                    console.error("Error:", error);
                 }
-            }
-            request.open("POST", "/processes/searchReviewsProcess.php", true);
-            request.send(form);
+            })();
         } else {
             setDefault();
         }
@@ -33,18 +30,16 @@ function searchInputFocus() {
 }
 
 
-function setDefault() {
-    const request = new XMLHttpRequest();
-    const form = new FormData();
-    form.append("setDefault", "hello");
-    request.onreadystatechange = () => {
-        if (request.status == 200 && request.readyState == 4) {
-            const result = JSON.parse(request.responseText);
-            makeHTML(result);
+async function setDefault() {
+    try {
+        const response = await api.get('/admin/reviews', { setDefault: true });
+        
+        if (response.success && response.data) {
+            makeHTML(response.data);
         }
+    } catch (error) {
+        console.error("Error:", error);
     }
-    request.open("POST", "/processes/searchReviewsProcess.php", true);
-    request.send(form);
 }
 
 function filterBy(filter) {
@@ -56,19 +51,17 @@ function filterBy(filter) {
     //     element.classList.toggle("hover:bg-gray-600");
     // });
 
-    const request = new XMLHttpRequest();
-    const form = new FormData();
-    form.append("filter", filter);
-    request.onreadystatechange = () => {
-        if (request.readyState == 4 && request.status == 200) {
-            const result = JSON.parse(request.responseText);
-            if (result["msg"] == "success") {
-                makeHTML(result);
+    (async () => {
+        try {
+            const response = await api.get('/admin/reviews', { filter });
+            
+            if (response.success && response.data) {
+                makeHTML(response.data);
             }
+        } catch (error) {
+            console.error("Error:", error);
         }
-    }
-    request.open("POST", "/processes/searchReviewsProcess.php");
-    request.send(form);
+    })();
 }
 
 

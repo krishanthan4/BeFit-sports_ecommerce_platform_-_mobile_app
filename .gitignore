@@ -18,7 +18,6 @@ befit_mobile/app/src/main/java/com/sprinsec/mobile_v2/util/Config.java
 befit_mobile/app/google-services.json
 
 # Web/Server - Sensitive Files
-web/config/database.php
 web/config/.env
 web/config.php
 web/.env*.local

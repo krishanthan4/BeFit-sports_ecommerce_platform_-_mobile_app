@@ -1,6 +1,3 @@
-# .htaccess for API routing
-# Redirect all requests to api.php
-
 RewriteEngine On
 
 # Handle CORS preflight requests
@@ -14,3 +11,11 @@ RewriteRule ^api/v1/(.*)$ api.php [QSA,L]
 
 # Allow direct access to api.php
 RewriteRule ^api\.php$ - [L]
+
+# If file or directory exists, serve it directly
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Route all other requests through index.php
+RewriteRule ^(.*)$ index.php [QSA,L]

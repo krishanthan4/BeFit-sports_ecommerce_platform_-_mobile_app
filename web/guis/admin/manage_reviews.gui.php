@@ -157,17 +157,15 @@ function deleteConform() {
     const request = new XMLHttpRequest();
     const form = new FormData();
   const feed_id = document.getElementById("hiddenP").innerText;
-    form.append("feed_id", feed_id);
-    request.onreadystatechange = () => {
-        if (request.status == 200 && request.readyState == 4) {
-            if (request.responseText == "success") {
-                document.getElementById("deleteReviewModel").classList.add("hidden");
-document.getElementById("tr"+feed_id).classList.add("hidden");
-            }
+    try {
+        const response = await api.delete(`/admin/reviews/${feed_id}`);
+        if (response.success) {
+            document.getElementById("deleteReviewModel").classList.add("hidden");
+            document.getElementById("tr" + feed_id).classList.add("hidden");
         }
+    } catch (error) {
+        console.error("Error deleting review:", error);
     }
-    request.open("POST", "/processes/deleteConformProcess.php", true);
-    request.send(form);
 }
 
 </script>

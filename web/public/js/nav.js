@@ -51,17 +51,14 @@ setTimeout(() => {
 
 
 
-function signOut(){
-  
-  const request = new XMLHttpRequest();
-  request.onreadystatechange = ()=>{
-if(request.status==200 && request.readyState==4){
-if(request.responseText=="success"){
-window.location.href = "/";
-}
-
-}
-  }
-  request.open("POST","./processes/signoutProcess.php",true);
-  request.send();
+async function signOut() {
+    try {
+        const response = await AuthService.logout();
+        if (response.success) {
+            window.location.href = "/";
+        }
+    } catch (error) {
+        console.error("Logout error:", error);
+        window.location.href = "/";
+    }
 }

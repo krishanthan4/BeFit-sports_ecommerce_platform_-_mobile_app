@@ -1,4 +1,4 @@
-<?php require_once "./DbConnection.php";
+<?php require_once __DIR__ . '/../config/database.php';
 require_once "./common.php"; ?>
 <!-- Mobile Menu start -->
 <div class="hidden" id="MobileMenublack">

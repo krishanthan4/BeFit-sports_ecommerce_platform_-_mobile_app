@@ -1,114 +1,126 @@
-function filterPriceTick(startPrice , endPrice){
-// alert(startPrice +" , "+endPrice);
-const request = new XMLHttpRequest();
-const form  =new FormData();
-form.append("startPrice",startPrice);
-form.append("endPrice",endPrice);
-
-request.onreadystatechange = ()=>{
-    if(request.readyState==4 && request.status==200){
-        updateContent(request.responseText);
+async function filterPriceTick(startPrice, endPrice) {
+  try {
+    const response = await ProductService.getProducts({ 
+      startPrice, 
+      endPrice,
+      userProducts: true 
+    });
+    
+    if (response.success) {
+      updateContent(JSON.stringify({ message: "success", ...response.data }));
+    } else {
+      updateContent(JSON.stringify({ message: "error" }));
+    }
+  } catch (error) {
+    console.error("Error filtering by price:", error);
+    updateContent(JSON.stringify({ message: "error" }));
+  }
 }
-}
-request.open("POST","./processes/filterProcess.php",true);
-request.send(form);
-}
 
 
-function getFilterImages(id) {
-    const request = new XMLHttpRequest();
-    const form = new FormData();
-    form.append("id", id);
+async function getFilterImages(id) {
+    try {
+        const response = await api.get(`/products/${id}/images`);
 
-    request.onreadystatechange = () => {
-        if (request.readyState === 4 && request.status === 200) {
-            const result = JSON.parse(request.responseText);
+        if (response.success && response.data) {
+            const newImg = document.createElement("img");
+            newImg.classList.add("object-center", "object-cover", "rounded-md", "max-w-full");
 
-            if (result.message === "success") {
-                const newImg = document.createElement("img");
-                newImg.classList.add("object-center", "object-cover", "rounded-md", "max-w-full");
+            if (response.data.img_path) {
+                newImg.src = "./" + response.data.img_path;
+            } else {
+                newImg.classList.add("grayscale");
+                newImg.src = "./resources/new_user.png";
+            }
 
-                if (result.img_path) {
-                    newImg.src = "./" + result.img_path;
-                } else {
-                    newImg.classList.add("grayscale");
-                    newImg.src = "./resources/new_user.png";
-                }
-
-                const container = document.getElementById("existCardNew2_" + id);
+            const container = document.getElementById("existCardNew2_" + id);
+            if (container) {
                 container.appendChild(newImg);
             }
         }
-    };
-
-    request.open("POST", "./processes/filterImagesProcess.php", true);
-    request.send(form);
+    } catch (error) {
+        console.error("Error fetching product images:", error);
+    }
 }
 
 
-function filterActiveTime(order){
-
-    const request = new XMLHttpRequest();
-    const form  =new FormData();
-    form.append("order",order);
-    
-    request.onreadystatechange = ()=>{
-        if(request.readyState==4 && request.status==200){
-            updateContent(request.responseText);
+async function filterActiveTime(order) {
+    try {
+        const response = await ProductService.getProducts({ 
+            order,
+            userProducts: true 
+        });
+        
+        if (response.success) {
+            updateContent(JSON.stringify({ message: "success", ...response.data }));
+        } else {
+            updateContent(JSON.stringify({ message: "error" }));
+        }
+    } catch (error) {
+        console.error("Error filtering by time:", error);
+        updateContent(JSON.stringify({ message: "error" }));
     }
-    }
-    request.open("POST","./processes/filterProcess.php",true);
-    request.send(form);
 }
 
 
-function filterByQuantity(quantity){
+async function filterByQuantity(quantity) {
     const quantityButtons1 = document.getElementById("quantityButtons1");
 
-    if(quantityButtons1.checked){
-
+    if (quantityButtons1.checked) {
+        // Handle checked state if needed
     }
-    const request = new XMLHttpRequest();
-    const form  =new FormData();
-    form.append("quantity",quantity);
     
-    request.onreadystatechange = ()=>{
-        if(request.readyState==4 && request.status==200){
-    updateContent(request.responseText);
+    try {
+        const response = await ProductService.getProducts({ 
+            quantity,
+            userProducts: true 
+        });
+        
+        if (response.success) {
+            updateContent(JSON.stringify({ message: "success", ...response.data }));
+        } else {
+            updateContent(JSON.stringify({ message: "error" }));
         }
+    } catch (error) {
+        console.error("Error filtering by quantity:", error);
+        updateContent(JSON.stringify({ message: "error" }));
     }
-    request.open("POST","./processes/filterProcess.php",true);
-    request.send(form);
 }
 
-function filterByCondition(condition){
-
-    const request = new XMLHttpRequest();
-    const form  =new FormData();
-    form.append("condition",condition);
-    
-    request.onreadystatechange = ()=>{
-        if(request.readyState==4 && request.status==200){
-            updateContent(request.responseText);
+async function filterByCondition(condition) {
+    try {
+        const response = await ProductService.getProducts({ 
+            condition,
+            userProducts: true 
+        });
+        
+        if (response.success) {
+            updateContent(JSON.stringify({ message: "success", ...response.data }));
+        } else {
+            updateContent(JSON.stringify({ message: "error" }));
+        }
+    } catch (error) {
+        console.error("Error filtering by condition:", error);
+        updateContent(JSON.stringify({ message: "error" }));
     }
-    }
-    request.open("POST","./processes/filterProcess.php",true);
-    request.send(form);
 }
 
-function filterByCategory(category){
-
-    const request = new XMLHttpRequest();
-    const form  =new FormData();
-    form.append("category",category);
-    
-    request.onreadystatechange = ()=>{
-        if(request.readyState==4 && request.status==200){
-            updateContent(request.responseText);
+async function filterByCategory(category) {
+    try {
+        const response = await ProductService.getProducts({ 
+            category,
+            userProducts: true 
+        });
+        
+        if (response.success) {
+            updateContent(JSON.stringify({ message: "success", ...response.data }));
+        } else {
+            updateContent(JSON.stringify({ message: "error" }));
+        }
+    } catch (error) {
+        console.error("Error filtering by category:", error);
+        updateContent(JSON.stringify({ message: "error" }));
     }
-    }
-    request.open("POST","./processes/filterProcess.php",true);
-    request.send(form);
 }
 
 

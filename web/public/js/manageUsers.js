@@ -1,16 +1,13 @@
-function toggleUserStatus(user_email) {
+async function toggleUserStatus(user_email) {
     const button = document.getElementById("blockbutton-" + user_email);
-    const formData = new FormData();
-    formData.append("user_email", user_email);
-    formData.append("active", button.dataset.initialStatus === "1" ? "2" : "1");
+    const newStatus = button.dataset.initialStatus === "1" ? "2" : "1";
   
-    const request = new XMLHttpRequest();
-    request.open("POST", "./processes/manageUsersProcess.php", true);
-    request.onreadystatechange = function () {
-      if (request.readyState == 4) {
-        if (request.status == 200) {
-          const data = JSON.parse(request.responseText);
-          if (data.status === "success") {
+    try {
+        const response = await api.put(`/admin/users/${user_email}/status`, {
+            status: newStatus
+        });
+        
+        if (response.success) {
             console.log(`Initial status: ${button.dataset.initialStatus}`);
             if (button.dataset.initialStatus === "1") {
               button.textContent = "unblock";
@@ -45,15 +42,11 @@ function toggleUserStatus(user_email) {
     var searchText = document.getElementById("searchInput").value.trim();
   
     if (searchText !== "") {
-      var xhr = new XMLHttpRequest();
-      xhr.open("POST", "/processes/searchUsersProcess.php", true);
-      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-      xhr.onreadystatechange = function () {
-        if (xhr.readyState === XMLHttpRequest.DONE) {
-          if (xhr.status === 200) {
-            var response = JSON.parse(xhr.responseText);
-  
-            if (response.msg === "success") {
+      (async () => {
+        try {
+          const response = await api.get('/admin/users', { search: searchText });
+          
+          if (response.success) {
               if (response.data.length > 0) {
                 updateTable(response.data);
               } else {
@@ -118,25 +111,17 @@ function toggleUserStatus(user_email) {
     });
   }
   
-  function loadAllUsers() {
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", "/processes/loadAllUsersProcess.php", true);
-    xhr.setRequestHeader("Content-Type", "application/json");
-    xhr.onreadystatechange = function () {
-      if (xhr.readyState === XMLHttpRequest.DONE) {
-        if (xhr.status === 200) {
-          var response = JSON.parse(xhr.responseText);
+  async function loadAllUsers() {
+    try {
+      const response = await api.get('/admin/users');
   
-          if (response.msg === "success") {
-            updateTable(response.data);
-          } else {
-            console.error("Failed to load all users:", response.msg);
-          }
-        } else {
-          console.error("Failed to fetch all users:", xhr.status);
-        }
+      if (response.success) {
+        updateTable(response.data);
+      } else {
+        console.error("Failed to load all users:", response.message);
       }
-    };
-    xhr.send();
+    } catch (error) {
+      console.error("Failed to fetch all users:", error);
+    }
   }
   

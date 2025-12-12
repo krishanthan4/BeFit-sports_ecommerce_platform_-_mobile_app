@@ -1,75 +1,57 @@
-function toggleSellerStatus(seller_email) {
+async function toggleSellerStatus(seller_email) {
   const button = document.getElementById("blockbutton-" + seller_email);
-  const formData = new FormData();
-  formData.append("user_email", seller_email);
-  formData.append("active", button.dataset.initialStatus === "1" ? "2" : "1");
-
-  const request = new XMLHttpRequest();
-  request.open("POST", "./processes/manageUsersProcess.php", true);
-  request.onreadystatechange = function () {
-    if (request.readyState == 4) {
-      if (request.status == 200) {
-        const data = JSON.parse(request.responseText);
-        if (data.status === "success") {
-          if (button.dataset.initialStatus === "1") {
-            button.textContent = "unblock";
-            button.classList.remove("hover:bg-red-200", "text-red-700", "border-red-600");
-            button.classList.add("hover:bg-green-200", "text-green-700", "border-green-600");
-            button.dataset.initialStatus = "2";
-          } else {
-            button.textContent = "block";
-            button.classList.remove("hover:bg-green-200", "text-green-700", "border-green-600");
-            button.classList.add("hover:bg-red-200", "text-red-700", "border-red-600");
-            button.dataset.initialStatus = "1";
-          }
-        } else {
-          console.error("Error: " + data.message);
-        }
+  const newStatus = button.dataset.initialStatus === "1" ? "2" : "1";
+  
+  try {
+    const response = await api.put(`/admin/sellers/${seller_email}/status`, { status: newStatus });
+    
+    if (response.success) {
+      if (button.dataset.initialStatus === "1") {
+        button.textContent = "unblock";
+        button.classList.remove("hover:bg-red-200", "text-red-700", "border-red-600");
+        button.classList.add("hover:bg-green-200", "text-green-700", "border-green-600");
+        button.dataset.initialStatus = "2";
       } else {
-        console.error("Error: " + request.statusText);
+        button.textContent = "block";
+        button.classList.remove("hover:bg-green-200", "text-green-700", "border-green-600");
+        button.classList.add("hover:bg-red-200", "text-red-700", "border-red-600");
+        button.dataset.initialStatus = "1";
       }
+    } else {
+      console.error("Error: " + response.message);
     }
-  };
-  request.onerror = function () {
+  } catch (error) {
+    console.error("Error:", error);
     alert("Network error occurred.");
-  };
-  request.send(formData);
+  }
 }
 
-function handleSearch(event) {
+async function handleSearch(event) {
   event.preventDefault();
 
   var searchText = document.getElementById("searchInput").value.trim();
 
   if (searchText !== "") {
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", "/processes/searchSellersProcess.php", true);
-    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    xhr.onreadystatechange = function () {
-      if (xhr.readyState === XMLHttpRequest.DONE) {
-        if (xhr.status === 200) {
-          var response = JSON.parse(xhr.responseText);
+    try {
+      const response = await api.get('/admin/sellers', { search: searchText });
 
-          if (response.msg === "success") {
-            if (response.data.length > 0) {
-              updateTable(response.data);
-            } else {
-              const manageSellersTable = document.getElementById("manageSellersTable");
-              if (manageSellersTable && !manageSellersTable.classList.contains("hidden")) {
-                manageSellersTable.classList.add("hidden");
-              }
-
-              document.getElementById("emptyManageSellers").classList.remove("hidden");
-            }
-          } else {
-            console.error("Search error:", response.data);
-          }
+      if (response.success) {
+        if (response.data.length > 0) {
+          updateTable(response.data);
         } else {
-          console.error("Failed to fetch search results:", xhr.status);
+          const manageSellersTable = document.getElementById("manageSellersTable");
+          if (manageSellersTable && !manageSellersTable.classList.contains("hidden")) {
+            manageSellersTable.classList.add("hidden");
+          }
+
+          document.getElementById("emptyManageSellers").classList.remove("hidden");
         }
+      } else {
+        console.error("Search error:", response.message);
       }
-    };
-    xhr.send("search_text=" + encodeURIComponent(searchText));
+    } catch (error) {
+      console.error("Failed to fetch search results:", error);
+    }
   } else {
     loadAllSellers();
   }
@@ -116,24 +98,16 @@ function updateTable(data) {
   });
 }
 
-function loadAllSellers() {
-  var xhr = new XMLHttpRequest();
-  xhr.open("GET", "/processes/loadAllSellersProcess.php", true);
-  xhr.setRequestHeader("Content-Type", "application/json");
-  xhr.onreadystatechange = function () {
-    if (xhr.readyState === XMLHttpRequest.DONE) {
-      if (xhr.status === 200) {
-        var response = JSON.parse(xhr.responseText);
+async function loadAllSellers() {
+  try {
+    const response = await api.get('/admin/sellers');
 
-        if (response.msg === "success") {
-          updateTable(response.data);
-        } else {
-          console.error("Failed to load all users:", response.msg);
-        }
-      } else {
-        console.error("Failed to fetch all users:", xhr.status);
-      }
+    if (response.success) {
+      updateTable(response.data);
+    } else {
+      console.error("Failed to load all sellers:", response.message);
     }
-  };
-  xhr.send();
+  } catch (error) {
+    console.error("Failed to fetch all sellers:", error);
+  }
 }

@@ -3,44 +3,46 @@ function onHoverShowMain(id) {
 const request = new XMLHttpRequest();
 const form = new FormData();
 form.append("cat_id",id);
-request.onreadystatechange=()=>{
-if(request.readyState==4 && request.status==200){
- response=JSON.parse(request.responseText);
-
- if(response["msg"]=="brand_success"){
-try {
-    document.getElementById("firstSubUL").classList.remove("hidden");
-    document.getElementById("secondSubUL").classList.add("hidden");
-
-    document.getElementById("firstSubUL").innerHTML="";
-for (let index = 0; index < Object.keys(response).length; index++) {
-    let li1 = document.createElement("li");
-    li1.classList.add("text-gray-400","py-2","cursor-pointer","px-3","hover:text-orange-500","flex","items-center");
-    li1.innerHTML=response[index].brand_name+"<svg id='"+response[index].brand_id.toString()+"Li2BrandSVG' xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor' class='w-5 h-5 ms-auto opacity-0'><path stroke-linecap='round' stroke-linejoin='round' d='m8.25 4.5 7.5 7.5-7.5 7.5'/></svg>";
-    li1.id=response[index].brand_id+"brandLI";
-    document.getElementById("firstSubUL").append(li1);
-
-    document.getElementById(response[index].brand_id + "brandLI").addEventListener("mouseover", function() {
-        onHoverShowSubBrandLI1(response[index].brand_id);
-    });
-    document.getElementById(response[index].brand_id + "brandLI").addEventListener("mouseleave", function() {
-        onHoverHideSubBrandLI1(response[index].brand_id);
-    });
-}
-} catch (error) {
+(async () => {
+  try {
+    const response = await api.post('/categories/sort', { cat_id: id });
     
-}
+    if (response.success && response.data) {
+      const data = response.data;
+      
+      if (data.msg === "brand_success") {
+        try {
+          document.getElementById("firstSubUL").classList.remove("hidden");
+          document.getElementById("secondSubUL").classList.add("hidden");
 
-}else if (response["msg"] == "product_success") {
-  product_success(response);
-}else{
+          document.getElementById("firstSubUL").innerHTML="";
+          for (let index = 0; index < Object.keys(data).length; index++) {
+            let li1 = document.createElement("li");
+            li1.classList.add("text-gray-400","py-2","cursor-pointer","px-3","hover:text-orange-500","flex","items-center");
+            li1.innerHTML=data[index].brand_name+"<svg id='"+data[index].brand_id.toString()+"Li2BrandSVG' xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor' class='w-5 h-5 ms-auto opacity-0'><path stroke-linecap='round' stroke-linejoin='round' d='m8.25 4.5 7.5 7.5-7.5 7.5'/></svg>";
+            li1.id=data[index].brand_id+"brandLI";
+            document.getElementById("firstSubUL").append(li1);
+
+            document.getElementById(data[index].brand_id + "brandLI").addEventListener("mouseover", function() {
+              onHoverShowSubBrandLI1(data[index].brand_id);
+            });
+            document.getElementById(data[index].brand_id + "brandLI").addEventListener("mouseleave", function() {
+              onHoverHideSubBrandLI1(data[index].brand_id);
+            });
+          }
+        } catch (error) {
+          console.error("Error:", error);
+        }
+      } else if (data.msg === "product_success") {
+        product_success(data);
+      } else {
         console.log("something went wrong !");
+      }
     }
-}
-
-}
-request.open("POST","/processes/homeSortProcess.php",true);
-request.send(form);
+  } catch (error) {
+    console.error("Error:", error);
+  }
+})();
 
     }
 
@@ -50,45 +52,46 @@ request.send(form);
         const request2= new XMLHttpRequest();
         const form2 = new FormData();
         form2.append("brand_id",id);
-        request2.onreadystatechange=()=>{
-            if(request2.readyState==4 && request2.status==200){
-                let response2 = JSON.parse(request2.responseText);
-if(response2["msg"]="model_success"){
-
-    try {
-        document.getElementById("secondSubUL").innerHTML="";
-        document.getElementById("secondSubUL").classList.remove("hidden");
-        document.getElementById("secondSubUL").classList.add("xl:ms-[38%]","lg:ms-[48%]","ms-[53%]");
-    
-    for (let index = 0; index < Object.keys(response2).length; index++) {
-        let li1 = document.createElement("li");
-        li1.classList.add("text-gray-400","py-2","cursor-pointer","px-3","hover:text-orange-500","flex","items-center");
-        li1.innerHTML=response2[index].model_name+"<svg id='"+response2[index].model_id.toString()+"Li2ModelSVG' xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor' class='w-5 h-5 ms-auto opacity-0'><path stroke-linecap='round' stroke-linejoin='round' d='m8.25 4.5 7.5 7.5-7.5 7.5'/></svg>";
-        li1.id=response2[index].model_id+"ModelLI";
- 
-        document.getElementById("secondSubUL").append(li1);
-    
-        document.getElementById(response2[index].model_id + "ModelLI").addEventListener("mouseover", function() {
-            onHoverShowSubModelLI1(response2[index].model_id);
-        });
-        document.getElementById(response2[index].model_id + "ModelLI").addEventListener("mouseleave", function() {
-            onHoverHideSubModelLI1(response2[index].model_id);
-        });
-  
-    }
-    } catch (error) {
-        
-    }
-
-
-}else if(response2["msg"]="product_success"){
-product_success(response2);
-}
+        (async () => {
+          try {
+            const response2 = await api.post('/categories/sort', { brand_id: id });
+            
+            if (response2.success && response2.data) {
+              const data = response2.data;
+              
+              if (data.msg === "model_success") {
+                try {
+                  document.getElementById("secondSubUL").innerHTML="";
+                  document.getElementById("secondSubUL").classList.remove("hidden");
+                  document.getElementById("secondSubUL").classList.add("xl:ms-[38%]","lg:ms-[48%]","ms-[53%]");
+              
+                  for (let index = 0; index < Object.keys(data).length; index++) {
+                    let li1 = document.createElement("li");
+                    li1.classList.add("text-gray-400","py-2","cursor-pointer","px-3","hover:text-orange-500","flex","items-center");
+                    li1.innerHTML=data[index].model_name+"<svg id='"+data[index].model_id.toString()+"Li2ModelSVG' xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor' class='w-5 h-5 ms-auto opacity-0'><path stroke-linecap='round' stroke-linejoin='round' d='m8.25 4.5 7.5 7.5-7.5 7.5'/></svg>";
+                    li1.id=data[index].model_id+"ModelLI";
+             
+                    document.getElementById("secondSubUL").append(li1);
+                
+                    document.getElementById(data[index].model_id + "ModelLI").addEventListener("mouseover", function() {
+                      onHoverShowSubModelLI1(data[index].model_id);
+                    });
+                    document.getElementById(data[index].model_id + "ModelLI").addEventListener("mouseleave", function() {
+                      onHoverHideSubModelLI1(data[index].model_id);
+                    });
+              
+                  }
+                } catch (error) {
+                  console.error("Error:", error);
+                }
+              } else if (data.msg === "product_success") {
+                product_success(data);
+              }
             }
-          
-        }
-        request2.open("POST","/processes/homeSortProcess.php",true);
-        request2.send(form2);
+          } catch (error) {
+            console.error("Error:", error);
+          }
+        })();
     }
     // document.getElementById("firstSubUL").classList.remove("hidden");
 //model
@@ -99,16 +102,20 @@ function onHoverShowSubModelLI1(id) {
     const request3= new XMLHttpRequest();
     const form3 = new FormData();
     form3.append("model_id",id);
-    request3.onreadystatechange=()=>{
-if(request3.readyState==4 && request3.status==200){
-    response3 = JSON.parse(request3.responseText);
-    if(response3["msg"]="product_success"){
-        product_success2(response3);
-    }
-}
-    }
-    request3.open("POST","/processes/homeSortProcess.php",true);
-    request3.send(form3);
+    (async () => {
+      try {
+        const response3 = await api.post('/categories/sort', { model_id: id });
+        
+        if (response3.success && response3.data) {
+          const data = response3.data;
+          if (data.msg === "product_success") {
+            product_success2(data);
+          }
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    })();
 }
 
 function product_success(response){

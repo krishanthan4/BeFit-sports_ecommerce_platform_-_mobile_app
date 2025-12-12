@@ -1,99 +1,64 @@
-function changeStatus(id) {
-  $.ajax({
-    url: `/processes/changeStatusProcess.php?id=${id}`,
-    method: "GET",
-    success: function (responseData) {
-      if (
-        responseData.trim() === "activated" ||
-        responseData.trim() === "deactivated"
-      ) {
-        window.location.reload();
-      } else {
-        $("#msgToast").removeClass("hidden");
-        $("#msg").html(responseData);
-        setTimeout(() => {
-          $("#msgToast").addClass("hidden");
-        }, 2500);
-      }
-    },
-    error: function (errorThrown) {
-      console.error("Error:", errorThrown);
-    },
-  });
-}
-
-function sendId(id) {
-  $.ajax({
-    url: `/processes/sendIdProcess.php?id=${id}`,
-    method: "GET",
-    success: function (responseData) {
-      if (responseData.trim() === "Success") {
-        window.location.href = "/editProduct";
-      } else {
-        $("#msgToast").removeClass("hidden");
-        $("#msg").html(responseData);
-        setTimeout(() => {
-          $("#msgToast").addClass("hidden");
-        }, 2500);
-      }
-    },
-    error: function (errorThrown) {
-      console.error("Error:", errorThrown);
-    },
-  });
-}
-
-function updateProduct() {
+async function changeStatus(id) {
   try {
+    const response = await api.put(`/seller/products/${id}`, { status_toggle: true });
+    if (response.success) {
+      window.location.reload();
+    }
+  } catch (error) {
+    $("#msgToast").removeClass("hidden");
+    $("#msg").html(error.message);
+    setTimeout(() => {
+      $("#msgToast").addClass("hidden");
+    }, 2500);
+  }
+}
+
+async function sendId(id) {
+  try {
+    // Store product ID in session storage for edit page
+    sessionStorage.setItem('editProductId', id);
+    window.location.href = "/editProduct";
+  } catch (error) {
+    $("#msgToast").removeClass("hidden");
+    $("#msg").html(error.message);
+    setTimeout(() => {
+      $("#msgToast").addClass("hidden");
+    }, 2500);
+  }
+}
+
+async function updateProduct() {
+  try {
+    const productId = sessionStorage.getItem('editProductId');
     const title = $("#title").val();
     const quantity = $("#quantity").val();
     const deliveryFee = $("#deliveryFee").val();
     const description = $("#description").val();
-    var image = $("#imageUploader")[0].files;
 
-    const form = new FormData();
-    form.append("title", title);
-    form.append("quantity", quantity);
-    form.append("deliveryFee", deliveryFee);
-    form.append("description", description);
+    const productData = {
+      title,
+      quantity,
+      delivery_fee: deliveryFee,
+      description
+    };
 
-    $.each(image, function (index, file) {
-      form.append("image" + index, file);
-    });
-
-    $.ajax({
-      url: "/processes/updateProductProcess.php",
-      type: "POST",
-      data: form,
-      processData: false,
-      contentType: false,
-      success: function (responseData) {
-        if (
-          responseData.trim() === "Product has been Updated." ||
-          responseData.trim() !== "Invalid Image Count."
-        ) {
-          $("#msgToast").removeClass("hidden");
-          $("#msg").html("Product updated Successfully !");
-          $("#msgToast").addClass("border-green-500");
-          $("#msgIcon").addClass("bg-green-500");
-          setTimeout(() => {
-            $("#msgToast").addClass("hidden");
-            window.location = "/myProducts";
-          }, 2500);
-        } else {
-          $("#msgToast").removeClass("hidden");
-          $("#msg").html(responseData);
-          setTimeout(() => {
-            $("#msgToast").addClass("hidden");
-          }, 2500);
-        }
-      },
-      error: function (xhr, status, error) {
-        console.error("Error occurred while updating product:", error);
-      },
-    });
+    const response = await ProductService.updateProduct(productId, productData);
+    if (response.success) {
+      $("#msgToast").removeClass("hidden");
+      $("#msg").html("Product updated Successfully!");
+      $("#msgToast").addClass("border-green-500");
+      $("#msgIcon").addClass("bg-green-500");
+      setTimeout(() => {
+        $("#msgToast").addClass("hidden");
+        window.location = "/myProducts";
+      }, 2500);
+    }
   } catch (error) {
-    console.error("Error occurred while updating product:", error);
+    $("#msgToast").removeClass("hidden");
+    $("#msg").html(error.message);
+    setTimeout(() => {
+      $("#msgToast").addClass("hidden");
+    }, 2500);
   }
 }
 
@@ -133,21 +98,29 @@ function addProduct() {
     form.append("image" + index, file);
   });
 
-  $.ajax({
-    url: "/processes/addProductProcess.php",
-    type: "POST",
-    data: form,
-    processData: false,
-    contentType: false,
-    success: function (data) {
-      if (data === "success") {
-        $("#msgToast").removeClass("hidden");
-        $("#msg").html("Product Saved Successfully!");
-        $("#msgToast").addClass("border-green-500");
-        $("#msgIcon").addClass("bg-green-500");
-        setTimeout(function () {
-          $("#msgToast").addClass("hidden");
-          window.location.reload();
+  try {
+    const productData = {
+      category_id: category,
+      brand_id: brand,
+      model_id: model,
+      title,
+      condition_id: condition,
+      color_id: color,
+      quantity,
+      price: cost,
+      delivery_fee: deliveryFee,
+      description
+    };
+
+    const response = await ProductService.createProduct(productData);
+    if (response.success) {
+      $("#msgToast").removeClass("hidden");
+      $("#msg").html("Product Saved Successfully!");
+      $("#msgToast").addClass("border-green-500");
+      $("#msgIcon").addClass("bg-green-500");
+      setTimeout(function () {
+        $("#msgToast").addClass("hidden");
+        window.location.reload();
         }, 2500);
       } else {
         $("#msgToast").removeClass("hidden");
@@ -174,8 +147,10 @@ function addColor() {
   form.append("colorInput", colorinput);
 
   request.onreadystatechange = () => {
-    if (request.readyState == 4 && request.status == 200) {
-      if (request.responseText == "success") {
+    try {
+      const response = await api.post('/products/colors', { color: colorValue });
+      
+      if (response.success) {
         document.getElementById("color").appendChild(colorOption);
         $("#msgToast").removeClass("hidden");
         $("#msg").html("Color Added !");
@@ -185,9 +160,9 @@ function addColor() {
           $("#msgToast").addClass("hidden");
           $("#colorinput").val("");
         }, 2500);
-      }else {
+      } else {
         $("#msgToast").removeClass("hidden");
-        $("#msg").html(request.responseText);
+        $("#msg").html(response.message || "Failed to add color");
         $("#msgToast").removeClass("border-green-500");
         $("#msgIcon").removeClass("bg-green-500");
         $("#msgToast").addClass("border-red-500");
@@ -196,9 +171,17 @@ function addColor() {
           $("#msgToast").addClass("hidden");
         }, 2500);
       }
+    } catch (error) {
+      console.error("Error:", error);
+      $("#msgToast").removeClass("hidden");
+      $("#msg").html("Network error occurred");
+      $("#msgToast").addClass("border-red-500");
+      $("#msgIcon").addClass("bg-red-500");
+      setTimeout(function () {
+        $("#msgToast").addClass("hidden");
+      }, 2500);
     }
   };
 
-  request.open("POST", "./processes/addColorProcess.php", true);
-  request.send(form);
+  // Removed XMLHttpRequest code
 }

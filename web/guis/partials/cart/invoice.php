@@ -3,7 +3,7 @@
 function invoice_function(){
   
     if (isset ($_GET["order_id"])) {
-        require_once "./DbConnection.php";
+        require_once "../../../config/database.php";
     $order_idrrr = $_GET["order_id"];
 $invoicerrrs_rs = Database::search("SELECT * FROM `invoice` WHERE `order_id`='" . $order_idrrr . "' ");
 $userAddress_rss = Database::search("SELECT * FROM `user_has_address` INNER JOIN `city` ON `city`.`city_id`=`user_has_address`.`city_city_id` INNER JOIN `district` ON `district`.`district_id`=`city`.`district_district_id` WHERE `user_email`='" . $_SESSION["user"]["email"] . "'");

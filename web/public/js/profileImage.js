@@ -9,55 +9,46 @@ function changeProfileImage() {
   };
 }
 
-function removeProfileImage(image) {
+async function removeProfileImage(image) {
   const email = document.getElementById("email2").value;
-  const request = new XMLHttpRequest();
-  const form = new FormData();
-  form.append("email", email);
 
-  request.onreadystatechange = () => {
-    if (request.readyState == 4 && request.status == 200) {
-      if (request.responseText == "success") {
-        document.getElementById("msgToast").classList.remove("hidden");
-        document.getElementById("msg").innerHTML = "Profile Image Removed";
-        document.getElementById("msgToast").classList.remove("border-red-500");
-        document.getElementById("msgToast").classList.add("border-green-500");
-        document.getElementById("msgIcon").classList.remove("bg-red-500");
-        document.getElementById("msgIcon").classList.add("bg-green-500");
+  try {
+    const response = await UserService.removeProfileImage({ email });
 
-        sendImageToDelete(image);
-        document.getElementById("msgToast").classList.remove("hidden");
-        document.getElementById("msg").innerHTML = "Profile Image Removed";
-        document.getElementById("msgToast").classList.remove("border-red-500");
-        document.getElementById("msgToast").classList.add("border-green-500");
-        document.getElementById("msgIcon").classList.remove("bg-red-500");
-        document.getElementById("msgIcon").classList.add("bg-green-500");
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
-      } else {
-        document.getElementById("msgToast").classList.remove("hidden");
-        document.getElementById("msg").innerHTML = "something went wrong";
-        setTimeout(() => {
-          document.getElementById("msgToast").classList.add("hidden");
-        }, 1000);
-      }
+    if (response.success) {
+      document.getElementById("msgToast").classList.remove("hidden");
+      document.getElementById("msg").innerHTML = "Profile Image Removed";
+      document.getElementById("msgToast").classList.remove("border-red-500");
+      document.getElementById("msgToast").classList.add("border-green-500");
+      document.getElementById("msgIcon").classList.remove("bg-red-500");
+      document.getElementById("msgIcon").classList.add("bg-green-500");
+
+      await sendImageToDelete(image);
+      
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+    } else {
+      document.getElementById("msgToast").classList.remove("hidden");
+      document.getElementById("msg").innerHTML = "something went wrong";
+      setTimeout(() => {
+        document.getElementById("msgToast").classList.add("hidden");
+      }, 1000);
     }
-  };
-
-  request.open("POST", "./processes/removeProfileProcess.php", true);
-  request.send(form);
-}
-
-function sendImageToDelete(image){
-  const request = new XMLHttpRequest();
-  const form = new FormData();
-  form.append("image",image);
-  request.onreadystatechange = ()=>{
-if(request.readyState==4 && request.status==200){
-
-}
+  } catch (error) {
+    console.error("Error:", error);
+    document.getElementById("msgToast").classList.remove("hidden");
+    document.getElementById("msg").innerHTML = "something went wrong";
+    setTimeout(() => {
+      document.getElementById("msgToast").classList.add("hidden");
+    }, 1000);
   }
-request.open("POST","./processes/removeProfile2Process.php",true);
-request.send(form);
+}
+
+async function sendImageToDelete(image) {
+  try {
+    await api.post('/user/profile/delete-image-file', { image });
+  } catch (error) {
+    console.error("Error deleting image file:", error);
+  }
 }

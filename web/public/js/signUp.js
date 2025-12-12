@@ -58,43 +58,29 @@ async function signUp() {
     const password = document.getElementById("password").value;
     const retype_password = document.getElementById("retype_password").value;
 
-    const formData = new FormData();
-    formData.append("email", email);
-    formData.append("password", password);
-    formData.append("retype_password", retype_password);
-
     try {
-        const response = await fetch("./processes/signupProcess.php", {
-            method: "POST",
-            body: formData
+        const response = await AuthService.register({
+            email,
+            password,
+            retype_password
         });
 
-        if (response.ok) {
-            const responseData = await response.text();
-            if (responseData.trim() === "success") {
-                document.getElementById("msgToast").classList.remove("hidden");
-                document.getElementById("msg").innerHTML = "Account Created Successfully";
-                document.getElementById("msgToast").classList.add("border-green-500");
-                document.getElementById("msgIcon").classList.add("bg-green-500");
-                setTimeout(() => {
-                    document.getElementById("msgToast").classList.add("hidden");
-                    window.location.href="/signin";
-                }, 2500);
-               
-
-            } else {
-                 document.getElementById("msgToast").classList.remove("hidden");
-                document.getElementById("msg").innerHTML = responseData;
-                setTimeout(() => {
-                    document.getElementById("msgToast").classList.add("hidden");
-                }, 2500);
-                
-            }
-        } else {
-            throw new Error("Network response was not ok.");
+        if (response.success) {
+            document.getElementById("msgToast").classList.remove("hidden");
+            document.getElementById("msg").innerHTML = "Account Created Successfully";
+            document.getElementById("msgToast").classList.add("border-green-500");
+            document.getElementById("msgIcon").classList.add("bg-green-500");
+            setTimeout(() => {
+                document.getElementById("msgToast").classList.add("hidden");
+                window.location.href = "/signin";
+            }, 2500);
         }
     } catch (error) {
-        console.error("Fetch error:", error);
+        document.getElementById("msgToast").classList.remove("hidden");
+        document.getElementById("msg").innerHTML = error.message;
+        setTimeout(() => {
+            document.getElementById("msgToast").classList.add("hidden");
+        }, 2500);
     }
 }
 

@@ -24,7 +24,7 @@
   }
 
   // live search text function
-  function searchingText(event) {
+  async function searchingText(event) {
     if (event.key !== "Backspace") {
       let key = null;
       if (document.getElementById("MainSearch2").value) {
@@ -33,36 +33,30 @@
         key = document.getElementById("MainSearch").value;
       }
       if (key) {
-        const request = new XMLHttpRequest();
-        request.onreadystatechange = () => {
-          if (request.status == 200 && request.readyState == 4) {
-            const result = JSON.parse(request.responseText);
-            if (result.msg == "success") {
-              const searchTextMain = document.getElementById("searchTextMain");
-              const searchTextSub = document.getElementById("searchTextSub");
-              searchTextMain.classList.remove("hidden");
-              searchTextMain.classList.add("flex");
-              // Clear previous search results
-              searchTextSub.innerHTML = "";
-              for (let index = 0; index < Object.keys(result).length; index++) {
-                let ptext = document.createElement("a");
-                ptext.classList.add("border-b", "cursor-pointer", "hover:text-orange-500", "transition-transform");
-                ptext.href = "search?query="+result[index].title;
-                let chagingtext= result[index].title;
-                if(chagingtext){
-                  ptext.textContent = chagingtext;
-                  searchTextSub.appendChild(ptext);
-                }                     
+        try {
+          const response = await api.get('/search', { query: key });
+          if (response.success) {
+            const searchTextMain = document.getElementById("searchTextMain");
+            const searchTextSub = document.getElementById("searchTextSub");
+            searchTextMain.classList.remove("hidden");
+            searchTextMain.classList.add("flex");
+            // Clear previous search results
+            searchTextSub.innerHTML = "";
+            response.data.forEach(product => {
+              let ptext = document.createElement("a");
+              ptext.classList.add("border-b", "cursor-pointer", "hover:text-orange-500", "transition-transform");
+              ptext.href = "search?query=" + product.title;
+              if (product.title) {
+                ptext.textContent = product.title;
+                searchTextSub.appendChild(ptext);
               }
-            }
+            });
           }
-        };
-  
-        request.open("GET", "./processes/searchProcess.php?query=" + key, true);
-        request.send();
-      }else{
+        } catch (error) {
+          console.error("Search error:", error);
+        }
+      } else {
         const searchTextMain = document.getElementById("searchTextMain");
-
         searchTextMain.classList.add("hidden");
         searchTextMain.classList.remove("flex");
       }

@@ -5,80 +5,55 @@ function openModal() {
     $("#verificationModal").removeClass("hidden");
 }
 
-function adminSignin() {
+async function adminSignin() {
     const email = $("#adminEmail").val();
-    const formData = new FormData();
-    formData.append("adminEmail", email);
 
-    $.ajax({
-        url: "/processes/adminSigninProcess.php",
-        type: "POST",
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: function (responseData) {
-            if (responseData.trim() === "success") {
-                $("#msgToast").removeClass("hidden");
-                $("#msg").html("Please take a look at your email to find the VERIFICATION CODE.");
-                $("#msgToast").addClass("border-green-500");
-                $("#msgIcon").addClass("bg-green-500");
-                setTimeout(() => {
-                    $("#msgToast").addClass("hidden");
-                    openModal();
-                }, 2000);
-
-            } else {
-                $("#msgToast").removeClass("hidden");
-                $("#msg").html(responseData);
-                setTimeout(() => {
-                    $("#msgToast").addClass("hidden");
-                }, 2500);
-            }
-
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            console.error("AJAX Error:", errorThrown);
+    try {
+        const response = await api.post('/admin/login', { email });
+        if (response.success) {
+            $("#msgToast").removeClass("hidden");
+            $("#msg").html("Please take a look at your email to find the VERIFICATION CODE.");
+            $("#msgToast").addClass("border-green-500");
+            $("#msgIcon").addClass("bg-green-500");
+            setTimeout(() => {
+                $("#msgToast").addClass("hidden");
+                openModal();
+            }, 2000);
         }
-    });
-
-
+    } catch (error) {
+        $("#msgToast").removeClass("hidden");
+        $("#msg").html(error.message);
+        setTimeout(() => {
+            $("#msgToast").addClass("hidden");
+        }, 2500);
+    }
 }
 
-function verifyAdminCode() {
+async function verifyAdminCode() {
     const verifyCode = $("#verifyCode").val();
-    const rememberMe = $("#rememberMe").is(":checked") ? "true" : "false";
-    const formData = new FormData();
-    formData.append("verifyCode", verifyCode);
-    formData.append("rememberMe", rememberMe);
+    const rememberMe = $("#rememberMe").is(":checked");
 
-    $.ajax({
-        url: "/processes/adminVerificationProcess.php",
-        type: "POST",
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: function (responseData) {
-            if (responseData.trim() === "success") {
-                $("#msgToast").removeClass("hidden");
-                $("#msg").html("Successfully Verified!");
-                $("#msgToast").addClass("border-green-500");
-                $("#msgIcon").addClass("bg-green-500");
-                setTimeout(() => {
-                    closeModal();
-                    window.location = "/adminDashboard";
-                }, 1000);
-               
-            } else {
-                $("#msgToast").removeClass("hidden");
-                $("#msg").html(responseData);
-                $("#msgIcon").removeClass("bg-green-500").addClass("bg-red-500"); 
-                $("#msgToast").removeClass("border-green-500").addClass("border-red-500"); 
-                setTimeout(() => {
-                    $("#msgToast").addClass("hidden");
-                    $("#msgIcon").removeClass("bg-red-500").addClass("bg-green-500"); 
-                    $("#msgToast").removeClass("border-red-500").addClass("border-green-500"); 
-                }, 2500);
+    try {
+        const response = await AuthService.verify(verifyCode);
+        if (response.success) {
+            $("#msgToast").removeClass("hidden");
+            $("#msg").html("Successfully Verified!");
+            $("#msgToast").addClass("border-green-500");
+            $("#msgIcon").addClass("bg-green-500");
+            setTimeout(() => {
+                closeModal();
+                window.location = "/adminDashboard";
+            }, 1000);
+        }
+    } catch (error) {
+        $("#msgToast").removeClass("hidden");
+        $("#msg").html(error.message);
+        $("#msgIcon").removeClass("bg-green-500").addClass("bg-red-500");
+        $("#msgToast").removeClass("border-green-500").addClass("border-red-500");
+        setTimeout(() => {
+            $("#msgToast").addClass("hidden");
+            $("#msgIcon").removeClass("bg-red-500").addClass("bg-green-500");
+            $("#msgToast").removeClass("border-red-500").addClass("border-green-500");
+        }, 2500);
             }
         }
-    });
-}

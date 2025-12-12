@@ -127,19 +127,14 @@ if (isset($_SESSION["admin"])) {
   <script>
     function deleteCategory(cat_id) {
       const request = new XMLHttpRequest();
-      const form = new FormData();
-      form.append("cat_id", cat_id);
-
-      request.onreadystatechange = () => {
-        if (request.status == 200 && request.readyState == 4) {
-          if (request.responseText == "success") {
-            document.getElementById("tr" + cat_id).remove();
-          } else {
-          }
+      try {
+        const response = await api.delete(`/admin/categories/${cat_id}`);
+        if (response.success) {
+          document.getElementById("tr" + cat_id).remove();
         }
+      } catch (error) {
+        console.error("Error deleting category:", error);
       }
-      request.open("POST", "/processes/deleteCategoryProcess.php", true);
-      request.send(form);
     }
 
     function addCategory() {
@@ -152,32 +147,28 @@ if (isset($_SESSION["admin"])) {
       document.getElementById("backgroundBlack").classList.add("hidden");
     }
 
-    function addCategorySend() {
-      const request = new XMLHttpRequest();
-      const form = new FormData();
+    async function addCategorySend() {
       const title = document.getElementById("title").value;
-      const ImageFileInput = document.getElementById('imageUploader');
-      const category_img = ImageFileInput.files[0];
-      const IconFileInput = document.getElementById('iconUploader');
-      const category_icon = IconFileInput.files[0];
-      form.append("category_title", title);
-      form.append("category_img", category_img);
-      form.append("category_icon", category_icon);
-      request.onreadystatechange = () => {
-        if (request.status == 200 && request.readyState == 4) {
-          if (request.responseText == "success") {
-            document.getElementById("categoryModel").classList.add("hidden");
-            document.getElementById("backgroundBlack").classList.add("hidden");
-            document.getElementById("msgToast").classList.remove("border-red-500");
-            document.getElementById("msgToast").classList.add("border-green-500");
-            document.getElementById("msgIcon").classList.remove("bg-red-500");
-            document.getElementById("msgIcon").classList.add("bg-green-500");
-            document.getElementById("msgToast").classList.remove("hidden");
-            document.getElementById("msg").innerText = "category added successfully !";
-            setTimeout(() => {
-              document.getElementById("msgToast").classList.add("hidden");
-              window.location.reload();
-            }, 2500);
+      
+      try {
+        const response = await api.post("/admin/categories", {
+          name: title,
+          description: ""
+        });
+        
+        if (response.success) {
+          document.getElementById("categoryModel").classList.add("hidden");
+          document.getElementById("backgroundBlack").classList.add("hidden");
+          document.getElementById("msgToast").classList.remove("border-red-500");
+          document.getElementById("msgToast").classList.add("border-green-500");
+          document.getElementById("msgIcon").classList.remove("bg-red-500");
+          document.getElementById("msgIcon").classList.add("bg-green-500");
+          document.getElementById("msgToast").classList.remove("hidden");
+          document.getElementById("msg").innerText = "Category added successfully!";
+          setTimeout(() => {
+            document.getElementById("msgToast").classList.add("hidden");
+            window.location.reload();
+          }, 2500);
           } else if (request.responseText == "already") {
             document.getElementById("categoryModel").classList.add("hidden");
             document.getElementById("backgroundBlack").classList.add("hidden");

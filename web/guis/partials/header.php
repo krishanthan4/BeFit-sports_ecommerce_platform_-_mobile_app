@@ -1,3 +1,8 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+?>
 <!DOCTYPE html>
 
 <html lang="en" class="h-full ">
@@ -10,9 +15,10 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css"  rel="stylesheet" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+    <!-- API Client -->
+    <script src="/public/js/api-client.js"></script>
+    <script src="/public/js/api-services.js"></script>
 </head>
   <body class="h-full bg-[#1d1e20] text-gray-200" onload="eventListener();">
-
-  <?php session_start();?>
 
   

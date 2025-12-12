@@ -1,17 +1,15 @@
-function signOut(){
-  
-    const request = new XMLHttpRequest();
-    request.onreadystatechange = ()=>{
-  if(request.status==200 && request.readyState==4){
-  if(request.responseText=="success"){
-  window.location.href = "/adminSignin";
-  }
-  
-  }
+async function signOut() {
+  try {
+    const response = await AuthService.logout();
+    
+    if (response.success) {
+      window.location.href = "/adminSignin";
     }
-    request.open("POST","./processes/adminSignoutProcess.php",true);
-    request.send();
+  } catch (error) {
+    console.error("Logout error:", error);
+    window.location.href = "/adminSignin";
   }
+}
 
   function toggleNavClose(){
     const navDiv = document.getElementById("navDiv");

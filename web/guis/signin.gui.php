@@ -1,6 +1,6 @@
 <?php
 include_once "./guis/partials/header.php";
-include_once "./DbConnection.php";
+require_once __DIR__ . '/../config/database.php';
 ?>
 
 <link rel="stylesheet" href="./public/css/style.css">

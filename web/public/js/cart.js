@@ -14,12 +14,10 @@ function changeQTY(id, uPrice, delivery_cost) {
     quantity = parseInt(event.target.value);
     const unitPrice = parseInt(uPrice);
 
-    $.ajax({
-      url: "/processes/cartQtyUpdateProcess.php",
-      method: "GET",
-      data: { qty: quantity, id: id },
-      success: function (responseData) {
-        if (responseData === "Updated") {
+    (async () => {
+      try {
+        const response = await CartService.updateCartItem(id, quantity);
+        if (response.success) {
           const requestedTotal_with_qty = parseInt(delivery_cost) + unitPrice * quantity;
           document.getElementById(id + "requested_total_P").innerText = "Rs. " + requestedTotal_with_qty.toFixed(2);
 
@@ -40,18 +38,15 @@ function changeQTY(id, uPrice, delivery_cost) {
             let deliveryGetCost = parseInt(document.getElementById("deliveryCost").textContent.replace("Rs. ", "").trim());
             document.getElementById("orderTotal").innerText = "Rs. " + (deliveryGetCost + newSubtotal).toFixed(2);
           }
-        } else {
-          $("#msgToast").removeClass("hidden");
-          $("#msg").html(responseData);
-          setTimeout(() => {
-            $("#msgToast").addClass("hidden");
-          }, 2500);
         }
-      },
-      error: function (errorThrown) {
-        console.error("There was a problem with the fetch operation:", errorThrown);
-      },
-    });
+      } catch (error) {
+        $("#msgToast").removeClass("hidden");
+        $("#msg").html(error.message);
+        setTimeout(() => {
+          $("#msgToast").addClass("hidden");
+        }, 2500);
+      }
+    })();
   });
 }
 

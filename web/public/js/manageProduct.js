@@ -1,73 +1,56 @@
-function toggleProductStatus(product_id) {
+async function toggleProductStatus(product_id) {
     const button = document.getElementById("blockbutton-" + product_id);
-    const formData = new FormData();
-    formData.append("product_id", product_id);
-    formData.append("active", button.dataset.initialStatus === '1' ? '2' : '1');
+    const newStatus = button.dataset.initialStatus === '1' ? '2' : '1';
   
-    const request = new XMLHttpRequest();
-    request.open("POST", "./processes/manageProductBlockProcess.php", true);
-    request.onreadystatechange = function () {
-      if (request.readyState == 4) {
-        if (request.status == 200) {
-          const responseData = JSON.parse(request.responseText);
-          if (responseData.status === "success") {
-            if (button.dataset.initialStatus === '1') {
-              button.textContent = "unblock";
-              button.classList.remove("hover:bg-red-200", "text-red-700", "border-red-600");
-              button.classList.add("hover:bg-green-200", "text-green-700", "border-green-600");
-              button.dataset.initialStatus = '2';
-            } else {
-              button.textContent = "block";
-              button.classList.remove("hover:bg-green-200", "text-green-700", "border-green-600");
-              button.classList.add("hover:bg-red-200", "text-red-700", "border-red-600");
-              button.dataset.initialStatus = '1';
-            }
-          } else {
-            console.error("Error: " + responseData.message);
-          }
+    try {
+      const response = await api.put(`/admin/products/${product_id}/status`, { status: newStatus });
+      
+      if (response.success) {
+        if (button.dataset.initialStatus === '1') {
+          button.textContent = "unblock";
+          button.classList.remove("hover:bg-red-200", "text-red-700", "border-red-600");
+          button.classList.add("hover:bg-green-200", "text-green-700", "border-green-600");
+          button.dataset.initialStatus = '2';
         } else {
-          console.error("Error: " + request.statusText);
+          button.textContent = "block";
+          button.classList.remove("hover:bg-green-200", "text-green-700", "border-green-600");
+          button.classList.add("hover:bg-red-200", "text-red-700", "border-red-600");
+          button.dataset.initialStatus = '1';
         }
+      } else {
+        console.error("Error: " + response.message);
       }
-    };
-    request.onerror = function () {
+    } catch (error) {
+      console.error("Error:", error);
       alert("Network error occurred.");
-    };
-    request.send(formData);
+    }
   }
   
-  function handleSearch(event) {
+  async function handleSearch(event) {
     event.preventDefault();
   
     var searchText = document.getElementById("searchInput").value.trim();
   
     if (searchText !== "") {
-      var xhr = new XMLHttpRequest();
-      xhr.open("POST", "/processes/searchProductsProcess.php", true);
-      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-      xhr.onreadystatechange = function () {
-        if (xhr.readyState === XMLHttpRequest.DONE) {
-          if (xhr.status === 200) {
-            var response = JSON.parse(xhr.responseText);
-            if (response.msg === "success") {
-              if (response.data.length > 0) {
-                updateTable(response.data);
-              } else {
-                const manageProductTable = document.getElementById("manageProductTable");
-                if (manageProductTable && !manageProductTable.classList.contains("hidden")) {
-                  manageProductTable.classList.add("hidden");
-                }
-                document.getElementById("emptyManageProduct").classList.remove("hidden");
-              }
-            } else {
-              console.error("Search error:", response.data);
-            }
+      try {
+        const response = await api.get('/admin/products', { search: searchText });
+        
+        if (response.success) {
+          if (response.data.length > 0) {
+            updateTable(response.data);
           } else {
-            console.error("Failed to fetch search results:", xhr.status);
+            const manageProductTable = document.getElementById("manageProductTable");
+            if (manageProductTable && !manageProductTable.classList.contains("hidden")) {
+              manageProductTable.classList.add("hidden");
+            }
+            document.getElementById("emptyManageProduct").classList.remove("hidden");
           }
+        } else {
+          console.error("Search error:", response.message);
         }
-      };
-      xhr.send("search_text=" + encodeURIComponent(searchText));
+      } catch (error) {
+        console.error("Failed to fetch search results:", error);
+      }
     } else {
       loadAllProducts();
     }
@@ -112,24 +95,17 @@ function toggleProductStatus(product_id) {
     });
   }
   
-  function loadAllProducts() {
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", "/processes/loadAllProductsProcess.php", true);
-    xhr.setRequestHeader("Content-Type", "application/json");
-    xhr.onreadystatechange = function () {
-      if (xhr.readyState === XMLHttpRequest.DONE) {
-        if (xhr.status === 200) {
-          var response = JSON.parse(xhr.responseText);
-          if (response.msg === "success") {
-            updateTable(response.data);
-          } else {
-            console.error("Failed to load all products:", response.msg);
-          }
-        } else {
-          console.error("Failed to fetch all products:", xhr.status);
-        }
+  async function loadAllProducts() {
+    try {
+      const response = await api.get('/admin/products');
+      
+      if (response.success) {
+        updateTable(response.data);
+      } else {
+        console.error("Failed to load all products:", response.message);
       }
-    };
-    xhr.send();
+    } catch (error) {
+      console.error("Failed to fetch all products:", error);
+    }
   }
   

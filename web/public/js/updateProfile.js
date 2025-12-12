@@ -25,51 +25,65 @@ async function updateProfile() {
     formData.append("image", image);
 
     try {
-        const response = await fetch("/processes/updateProfileProcess.php", {
-            method: "POST",
-            body: formData
-        });
-        if (response.ok) {
-            const responseData = await response.text();
-            if (responseData.trim() === "Updated" || responseData.trim() === "Saved") {
-                document.getElementById("msgToast").classList.remove("hidden");
-                document.getElementById("msg").innerHTML = "Profile Image Updated Successfully !";
-                document.getElementById("msgToast").classList.add("border-green-500");
-                document.getElementById("msgIcon").classList.add("bg-green-500");
-                setTimeout(() => {
-                    document.getElementById("msgToast").classList.add("hidden");
-                    window.location.href = "/signin";
-                }, 2500);
-                window.location.reload();
-            } else if (responseData.trim() === "You have not selected any image.") {
-                document.getElementById("msgToast").classList.remove("hidden");
-                document.getElementById("msg").innerHTML = "Saved !";
-                document.getElementById("msgToast").classList.add("border-green-500");
-                document.getElementById("msgIcon").classList.add("bg-green-500");
-                setTimeout(() => {
-                    document.getElementById("msgToast").classList.add("hidden");
-                    window.location.reload();
-                }, 2500);
-            } else {
-                document.getElementById("msgToast").classList.remove("hidden");
-                document.getElementById("msg").innerHTML = responseData;
-                setTimeout(() => {
-                    document.getElementById("msgToast").classList.add("hidden");
-                }, 2500);
-            }
+        const profileData = {
+            first_name: firstName,
+            last_name: lastName,
+            mobile,
+            gender,
+            line1,
+            line2,
+            province_id: province,
+            district_id: district,
+            city_id: city,
+            postal_code: pcode
+        };
 
-        } else {
-            throw new Error("Network response was not ok.");
+        const response = await UserService.updateProfile(profileData);
+        if (response.success) {
+            document.getElementById("msgToast").classList.remove("hidden");
+            document.getElementById("msg").innerHTML = "Profile Updated Successfully!";
+            document.getElementById("msgToast").classList.add("border-green-500");
+            document.getElementById("msgIcon").classList.add("bg-green-500");
+            setTimeout(() => {
+                document.getElementById("msgToast").classList.add("hidden");
+                window.location.reload();
+            }, 2500);
         }
     } catch (error) {
-        console.error("Fetch error:", error);
+        document.getElementById("msgToast").classList.remove("hidden");
+        document.getElementById("msg").innerHTML = error.message;
+        setTimeout(() => {
+            document.getElementById("msgToast").classList.add("hidden");
+        }, 2500);
     }
 
 }
 
 
 
-function loadDistricts() {
+async function loadDistricts() {
+    var provinceId = document.getElementById("province").value;
+    var districtDropdown = document.getElementById("district");
+    districtDropdown.innerHTML = "<option>Loading...</option>";
+
+    try {
+        const response = await api.get(`/districts/${provinceId}`);
+        if (response.success) {
+            districtDropdown.innerHTML = "<option value='0'>Select District</option>";
+            response.data.forEach(district => {
+                const option = document.createElement("option");
+                option.value = district.district_id;
+                option.textContent = district.district_name;
+                districtDropdown.appendChild(option);
+            });
+        }
+    } catch (error) {
+        console.error("Error loading districts:", error);
+        districtDropdown.innerHTML = "<option>Error loading districts</option>";
+    }
+}
+
+function _oldLoadDistricts() {
     var provinceId = document.getElementById("province").value;
     var districtDropdown = document.getElementById("district");
     districtDropdown.innerHTML = "<option>Loading...</option>";
